@@ -31,9 +31,16 @@ app.get('/search/:searchTerm/:location',(request, response) => {
 })
 app.post('/place', (request, response) => {
     console.log("place:", request.body)
-    services.addupdatebusiness(request.body)  
+    if (request.body.update){
+        services.updatebusiness(response,request.body)
+
+    }
+    else {
+        services.addbusiness(response,request.body)  
+    }
+    
     //console.log("Update scores:", scores)
-    response.json({message: 'Place update'})
+    //response.json({message: 'Place update'})
 
 })
 

@@ -39,20 +39,24 @@ const services = {
     findbusinesses:(response,text,city,state) => {
         //select * from nearbyplaces.business where name like '%C%' and city ilike '%Tucson%'
         client.query("select * from nearbyplaces.business where name ilike $1 and city ilike $2 and state ilike $3", [wildcard(text),wildcard(city),wildcard(state)],(err, res) => {
-            console.log(err, res)
+            //console.log(err, res)
             response.status(200).json(res.rows)
         })
     },
-    addbusiness:(business) => {
-        business.active = true
-        business.id = businesses.length
-        businesses.push(business)
+    addbusiness:(response,b) => {
+        client.query("INSERT INTO nearbyplaces.business (name, address, city, state, zip, phone)\
+        VALUES($1,$2,$3,$4,$5,$6);",[b.name,b.address,b.city,b.state,b.zip,b.phone], (err, res) => {
+            //console.log(err, res)
+            response.status(200).json("ok")
+        })
     },
-    updatebusiness:(business) => {
-        //replace element of choice with business
-        businesses[business.id] = business
-        console.log("update:",business)
-        console.log("update:",businesses)
+    updatebusiness:(response,b) => {
+        console.log("updatebussiness",b)
+        client.query("UPDATE nearbyplaces.business SET name=$1, address=$2, city=$3, state=$4, zip=$5, phone=$6 WHERE id=$7;",
+            [b.name,b.address,b.city,b.state,b.zip,b.phone,b.id],(err, res) => {
+            console.log(err, res)
+            response.status(200).json("ok")
+        })
         
     },
     addupdatebusiness:(business) => {
@@ -65,7 +69,7 @@ const services = {
     ,
     allbusinesses:(response) => {
         client.query('SELECT * from nearbyplaces.business', (err, res) => {
-            console.log(err, res)
+            //console.log(err, res)
             response.status(200).json(res.rows)
         })
     },

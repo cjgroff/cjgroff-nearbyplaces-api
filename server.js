@@ -18,6 +18,17 @@ app.use(express.urlencoded({extended: true}))
     response.json(found)
 })
 */
+//app.get('/test',(request, response) => {
+//    services.allbusinesses2(response)
+//  })
+  
+app.get('/search/:searchTerm/:location',(request, response) => {
+    ///search/chi/tucson,az
+    const term = request.params.searchTerm
+    const [city,state] = request.params.location.split(",")
+    console.log("TCS",term,city,state)
+    services.findbusinesses(response,term,city,state)
+})
 app.post('/place', (request, response) => {
     console.log("place:", request.body)
     services.addupdatebusiness(request.body)  
@@ -25,10 +36,11 @@ app.post('/place', (request, response) => {
     response.json({message: 'Place update'})
 
 })
+
 app.get('/places',(request, response) => {
     console.log("services",services)
     console.log("allb", services.allbusinesses)
-    response.json(services.allbusinesses())
+    services.allbusinesses(response)
 })
 app.post('/review/:placeId',(request, response) => { 
     let placeid = parseInt(request.params.placeId)

@@ -68,9 +68,30 @@ const services = {
     }
     ,
     allbusinesses:(response) => {
-        client.query('SELECT * from nearbyplaces.business', (err, res) => {
-            //console.log(err, res)
-            response.status(200).json(res.rows)
+        client.query('SELECT * from nearbyplaces.business; SELECT text , br.busid FROM nearbyplaces.review r, nearbyplaces.bus_review br where r.id = br.reviewid',
+         (err, res) => {
+            /*[[{"id":"2","name":"Chipotle Mexican Grill","address":"905 E University Blvd Ste 149",
+            "city":"Tucson","state":"AZ","zip":"85719","phone":"(520)628-7967"},
+            {"id":"3","name":"Burger King","address":"454 W Grant Rd","city":"Tucson",
+            "state":"AZ","zip":"85705","phone":"(520)622-2752"},{"id":"4","name":"x",
+            "address":"y","city":"z","state":"1","zip":"2","phone":"3"},{"id":"1",
+            "name":"Panda ExpressXYZ","address":"1303 E University Blvd","city":"Tucson",
+            "state":"AZ","zip":"85719","phone":"(520)626-3750"}],
+            [{"text":"This good chicken","busid":1},{"text":"like the fried rice"
+            */
+           for (let bi = 0 ; bi < res[0].rows.length; bi++) {
+                let b = res[0].rows[bi]
+                b.reviews = []
+                for (ri = 0; ri <res[1].rows.length; ri++){
+                    let r = res[1].rows[ri]
+                    if (b.id == r.busid){
+                       b.reviews.push(r.text) 
+                    }
+                }
+
+           }
+            console.log(err,"bussiness/reviews:", res)
+            response.status(200).json(res[0].rows)
         })
     },
     businessbyid:(id) => {

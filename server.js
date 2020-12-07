@@ -48,6 +48,7 @@ app.get('/places',(request, response) => {
     console.log("services",services)
     console.log("allb", services.allbusinesses)
     services.allbusinesses(response)
+    
 })
 app.post('/review/:placeId',(request, response) => { 
     let placeid = parseInt(request.params.placeId)
@@ -55,6 +56,7 @@ app.post('/review/:placeId',(request, response) => {
     let review = request.body.review
     services.addreview(placeid,review)
 })
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`)

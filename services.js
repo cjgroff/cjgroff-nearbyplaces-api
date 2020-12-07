@@ -66,7 +66,9 @@ const services = {
         services.addbusiness(business)
     },
     deletebusiness:(response,id) => {
-        client.query("DELETE FROM nearbyplaces.business WHERE id=$1",[id],
+        client.query("DELETE FROM nearbyplaces.business WHERE id=$1;",[id],
+        //DELETE FROM nearbyplaces.review WHERE id in (select reviewid from nearbyplaces.bus_review where busid = $1);\
+        //delete from nearbyplaces.bus_review where busid = $1
         (err, res) => {
             response.status(200).json("Delete")
         })

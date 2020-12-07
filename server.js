@@ -48,13 +48,13 @@ app.get('/places',(request, response) => {
     console.log("services",services)
     console.log("allb", services.allbusinesses)
     services.allbusinesses(response)
-    
+
 })
 app.post('/review/:placeId',(request, response) => { 
     let placeid = parseInt(request.params.placeId)
     console.log(request.body)
     let review = request.body.review
-    services.addreview(placeid,review)
+    services.addreview(response,placeid,review)
 })
 
 

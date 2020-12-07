@@ -1,4 +1,5 @@
 const { Client } = require('pg');
+const e = require('express');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -98,11 +99,17 @@ const services = {
         //return businesses.filter((b) => b.id == id)[0]
         return businesses[id]
     },
-    addreview:(id,review) => {
-        console.log("addreview",id,review)
-        const b = businesses[id]
-        console.log("review:",b)
-        b.reviews.push(review)
+    addreview:(response,bid,review) => {
+        console.log("addreview",bid,review)
+        client.query("INSERT INTO nearbyplaces.review (text) VALUES($1) returning id",[review],
+         (err, res) => {
+            console.log("id", res.rows[0].id)
+            client.query("INSERT INTO nearbyplaces.bus_review (busid,reviewid) VALUES($1,$2)",[bid,res.rows[0].id],
+         (err, res) => {
+             console.log("bus_review inset done", res,err)
+            response.status(200).json("review add")
+
+         })})  
 
     }
     

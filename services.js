@@ -1,5 +1,6 @@
 const { Client } = require('pg');
 const e = require('express');
+const { request } = require('express');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -64,10 +65,13 @@ const services = {
         console.log("addupdate:", business)
         services.addbusiness(business)
     },
-    deletebusiness:(id) => {
-        businesses[id].active = false
-    }
-    ,
+    deletebusiness:(response,id) => {
+        client.query("DELETE FROM nearbyplaces.business WHERE id=$1",[id],
+        (err, res) => {
+            response.status(200).json("Delete")
+        })
+
+    },
     allbusinesses:(response) => {
         client.query('SELECT * from nearbyplaces.business; SELECT text , br.busid FROM nearbyplaces.review r, nearbyplaces.bus_review br where r.id = br.reviewid',
          (err, res) => {

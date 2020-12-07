@@ -56,7 +56,11 @@ app.post('/review/:placeId',(request, response) => {
     let review = request.body.review
     services.addreview(response,placeid,review)
 })
-
+app.delete('/place/:placeId',(request, response) => {
+    let placeid = parseInt(request.params.placeId)
+    console.log("Deleting",placeid)
+    services.deletebusiness(response,placeid)
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`)
